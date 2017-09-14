@@ -1,12 +1,12 @@
 console.log('js');
 
-$(document).ready(function() {
+$(document).ready(function () {
   console.log('JQ');
   // load existing koalas on page load
   getKoalas();
 
   // add koala button click
-  $('#addButton').on('click', function() {
+  $('#addButton').on('click', function () {
     console.log('in addButton on click');
     var name = $('#nameIn').val();
     var age = $('#ageIn').val();
@@ -25,6 +25,12 @@ $(document).ready(function() {
     };
     // call saveKoala with the new obejct
     saveKoala(objectToSend);
+    // Below not working -- will deal with this later
+    $('#nameIn').val("");
+    $('#ageIn').val("");
+    $('#genderIn').val("");
+    $('#readyForTransferIn').val("");
+    $('#notesIn').val("");
   }); //end addButton on click
 }); // end doc ready
 
@@ -34,8 +40,9 @@ function getKoalas() {
   $.ajax({
     url: '/koalas',
     type: 'GET',
-    success: function(data) {
+    success: function (data) {
       console.log('got some koalas: ', data);
+      appendKoala(data);
     } // end success
   }); //end ajax
   // display on DOM with buttons that allow edit of each
@@ -48,8 +55,26 @@ function saveKoala(newKoala) {
     url: '/koalas',
     type: 'POST',
     data: newKoala,
-    success: function(data) {
-      console.log('got some koalas: ', data);
+    success: function (data) {
+      // console.log('got some koalas: ', data); <-- works
+      getKoalas();
     } // end success
   }); //end ajax
+}
+
+function appendKoala(koalaList) {
+  // console.log('appendKoala successfully called!'); <-- this works
+  console.log('Logging received koalas from appendKoala -> ', koalaList); // <-- works sometimes - aSync error most likely
+//   koalaList.forEach(function(koalaList) {
+//     $("#viewKoalas").append('<tr></tr>').append('<td>', name, '</td>').append('<td>', age, '</td>').append('<td>', gender, '</td>').append('<td>', readyForTransfer, '</td>').append('<td>', notes, '</td>');
+//   });
+// }
+  for (var i = 0; i < koalaList.length; i++) {
+    var name = koalaList[i].name;
+    var age = koalaList[i].age;
+    var gender = koalaList[i].gender;
+    var readyForTransfer = koalaList[i].ready_for_transfer;
+    var notes = koalaList[i].notes;
+    $("#viewKoalas").append('<tr><td>' + name + '</td><td>' + age + '</td><td>' + gender + '</td><td>' + readyForTransfer + '</td><td>' + notes + '</td></tr>');
+  }
 }

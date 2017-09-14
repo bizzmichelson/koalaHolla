@@ -15,9 +15,8 @@ router.get('/', function (req, res) {
                     console.log(connectionError);
                     res.sendStatus(500);
                 } else {
-                    console.log('resultObj ->', resultObj.rows);
+                    console.log('console logging resultObj.rows', resultObj.rows);
                     res.send(resultObj.rows);
-                    console.log('console logging resultObj.rows' + resultObj.rows);
                 }
             });
         }
@@ -31,10 +30,10 @@ router.post('/', function (req, res) {
     var koalaGender = req.body.gender;
     var koalaTransfer = req.body.readyForTransfer;
     var koalaNotes = req.body.notes;
-    console.log('in post inventory route -> ');
+    console.log('in post inventory route!');
     pool.connect(function (connectionError, client, done) {
         if (connectionError) {
-            console.log(connectionError, 'logging connection1');
+            // console.log(connectionError, 'logging connection1');
             res.sendStatus(500);
         } else {
             var queryString =
@@ -46,16 +45,15 @@ router.post('/', function (req, res) {
                 koalaTransfer,
                 koalaNotes
             ];
-            console.log('Logging var values in else of first if loop -> ', values);
-
+            // console.log('Logging var values in else of first if loop -> ', values);
             client.query(queryString, values, function (queryError, resultObj) {
                 done();
                 if (queryError) {
-                    console.log(connectionError, 'logging connectionerror2');
+                    // console.log(connectionError, 'logging connectionerror2');
                     res.sendStatus(500);
                 } else {
-                    console.log('Logging resultObj - > ', resultObj);
-                    res.sendStatus(201);
+                    console.log('Logging resultObj - > ', resultObj.rows);
+                    res.send(resultObj.rows);
                 }
             });
         }
