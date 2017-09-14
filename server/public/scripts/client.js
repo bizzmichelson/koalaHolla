@@ -35,13 +35,13 @@ $(document).ready(function () {
 }); // end doc ready
 
 function getKoalas() {
-  console.log('in getKoalas');
+  // console.log('in getKoalas');
   // ajax call to server to get koalas
   $.ajax({
     url: '/koalas',
     type: 'GET',
     success: function (data) {
-      console.log('got some koalas: ', data);
+      // console.log('got some koalas: ', data);
       appendKoala(data);
     } // end success
   }); //end ajax
@@ -49,7 +49,7 @@ function getKoalas() {
 } // end getKoalas
 
 function saveKoala(newKoala) {
-  console.log('in saveKoala', newKoala);
+  // console.log('in saveKoala', newKoala);
   // ajax call to server to get koalas
   $.ajax({
     url: '/koalas',
@@ -64,11 +64,7 @@ function saveKoala(newKoala) {
 
 function appendKoala(koalaList) {
   // console.log('appendKoala successfully called!'); <-- this works
-  console.log('Logging received koalas from appendKoala -> ', koalaList); // <-- works sometimes - aSync error most likely
-//   koalaList.forEach(function(koalaList) {
-//     $("#viewKoalas").append('<tr></tr>').append('<td>', name, '</td>').append('<td>', age, '</td>').append('<td>', gender, '</td>').append('<td>', readyForTransfer, '</td>').append('<td>', notes, '</td>');
-//   });
-// }
+  // console.log('Logging received koalas from appendKoala -> ', koalaList);
 $("#viewKoalas").empty();
   for (var i = 0; i < koalaList.length; i++) {
     var name = koalaList[i].name;
@@ -76,6 +72,18 @@ $("#viewKoalas").empty();
     var gender = koalaList[i].gender;
     var readyForTransfer = koalaList[i].ready_for_transfer;
     var notes = koalaList[i].notes;
-    $("#viewKoalas").append('<tr><td>' + name + '</td><td>' + age + '</td><td>' + gender + '</td><td>' + readyForTransfer + '</td><td>' + notes + '</td></tr>');
+    var id = koalaList[i].id;
+    $("#viewKoalas").append('<tr data-id="' +  id
+    + '"><td>' + name 
+    + '</td><td>' + age 
+    + '</td><td>' + gender 
+    + '</td><td>' + readyForTransfer 
+    + '</td><td>' + notes 
+    + '</td><td><button class="deleteButton btn btn-danger">Delete</button></td></tr>');
   }
+  $('.deleteButton').on('click', removeKoala);
+}
+
+function removeKoala() {
+  $(this).closest('tr').remove(); // testing buttons - to be removed later
 }
