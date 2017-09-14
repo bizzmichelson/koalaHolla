@@ -56,7 +56,7 @@ function saveKoala(newKoala) {
     type: 'POST',
     data: newKoala,
     success: function (data) {
-      // console.log('got some koalas: ', data); <-- works
+      // console.log('got some koalas: ', data);
       getKoalas();
     } // end success
   }); //end ajax
@@ -82,10 +82,9 @@ $("#viewKoalas").empty();
     + '</td><td><button type="button" class="btn btn-success">Ready for Transfer</button></td><td><button class="deleteButton btn btn-danger">Delete</button></td></tr>');
   }
   $('.deleteButton').on('click', removeKoala);
-}
+}// end appendKoala()
 
 function removeKoala() {
-  $(this).closest('tr').remove(); // testing buttons - to be removed later
   var koalaToDelete = $(this).closest('tr').data();
   $.ajax({
     url: '/koalas',
@@ -97,4 +96,4 @@ function removeKoala() {
       getKoalas();
     } // end success
   }); //end ajax
-}
+} // end removeKoala()

@@ -71,7 +71,7 @@ function koalaDBPush (req, res) {
             res.sendStatus(500);
         } else {
             var queryString =
-                'INSERT INTO koalas_inventory(name, gender, age, ready_for_transfer, notes) VALUES($1, $2, $3, $4, $5)';
+                'INSERT INTO koalas_inventory(name, age, gender, ready_for_transfer, notes) VALUES($1, $2, $3, $4, $5)';
             var values = [
                 koalaName,
                 koalaAge,
