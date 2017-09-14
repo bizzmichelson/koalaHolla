@@ -86,4 +86,15 @@ $("#viewKoalas").empty();
 
 function removeKoala() {
   $(this).closest('tr').remove(); // testing buttons - to be removed later
+  var koalaToDelete = $(this).closest('tr').data();
+  $.ajax({
+    url: '/koalas',
+    type: 'POST',
+    data: koalaToDelete,
+    success: function (data) {
+      console.log('deleted koala! ->', koalaToDelete);
+      
+      getKoalas();
+    } // end success
+  }); //end ajax
 }

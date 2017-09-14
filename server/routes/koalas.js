@@ -25,12 +25,46 @@ router.get('/', function (req, res) {
 
 // POST FUNCTION
 router.post('/', function (req, res) {
+    var koalaID = req.body.id;
+    console.log('in post inventory route!');
+    if (koalaID == undefined) {
+        koalaDBPush(req, res);
+    } else {
+        console.log('Calling koalaDelete on koalaID ' + koalaID);
+        koalaDelete(req, res);
+    }
+});
+
+function koalaDelete(req, res) {
+    pool.connect(function(connectionError, client, done){
+        if (connectionError) {
+            console.log('connection error in koalaDelete ', connectionError);
+            res.sendStatus(500);
+        } else {
+            var koalaID = req.body.id;
+            console.log('deleting koala #', koalaID);            
+            var queryString = "DELETE FROM koalas_inventory WHERE id=($1);";
+            var values = [koalaID];
+            client.query(queryString, values, function (queryError, resultObj) {
+                done();
+                if (queryError) {
+                    console.log(queryError, 'logging queryError in koalaDelete query');
+                    res.sendStatus(500);
+                } else {
+                    console.log('Logging resultObj from koala Delete- > ', resultObj.rows);
+                    res.send(resultObj.rows);
+                }
+            });
+        }
+    });
+}
+
+function koalaDBPush (req, res) {
     var koalaName = req.body.name;
     var koalaAge = req.body.age;
     var koalaGender = req.body.gender;
     var koalaTransfer = req.body.readyForTransfer;
     var koalaNotes = req.body.notes;
-    console.log('in post inventory route!');
     pool.connect(function (connectionError, client, done) {
         if (connectionError) {
             // console.log(connectionError, 'logging connection1');
@@ -59,6 +93,6 @@ router.post('/', function (req, res) {
         }
         //    res.sendStatus(201);
     });
-});
+}
 
 module.exports = router;
