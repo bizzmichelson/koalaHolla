@@ -79,7 +79,7 @@ $("#viewKoalas").empty();
     + '</td><td>' + gender 
     + '</td><td>' + readyForTransfer 
     + '</td><td>' + notes 
-    + '</td><td><button class="deleteButton btn btn-danger">Delete</button></td></tr>');
+    + '</td><td><button type="button" class="btn btn-success">Ready for Transfer</button></td><td><button class="deleteButton btn btn-danger">Delete</button></td></tr>');
   }
   $('.deleteButton').on('click', removeKoala);
 }

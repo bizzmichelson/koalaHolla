@@ -33,7 +33,7 @@ router.post('/', function (req, res) {
         console.log('Calling koalaDelete on koalaID ' + koalaID);
         koalaDelete(req, res);
     }
-});
+}); // end POST function
 
 function koalaDelete(req, res) {
     pool.connect(function(connectionError, client, done){
@@ -57,7 +57,7 @@ function koalaDelete(req, res) {
             });
         }
     });
-}
+} // end delete function
 
 function koalaDBPush (req, res) {
     var koalaName = req.body.name;
@@ -93,6 +93,6 @@ function koalaDBPush (req, res) {
         }
         //    res.sendStatus(201);
     });
-}
+} // end push to DB function
 
 module.exports = router;
