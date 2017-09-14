@@ -69,6 +69,7 @@ function appendKoala(koalaList) {
 //     $("#viewKoalas").append('<tr></tr>').append('<td>', name, '</td>').append('<td>', age, '</td>').append('<td>', gender, '</td>').append('<td>', readyForTransfer, '</td>').append('<td>', notes, '</td>');
 //   });
 // }
+$("#viewKoalas").empty();
   for (var i = 0; i < koalaList.length; i++) {
     var name = koalaList[i].name;
     var age = koalaList[i].age;
