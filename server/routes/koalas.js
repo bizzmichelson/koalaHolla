@@ -3,7 +3,7 @@ var pool = require('../modules/pool');
 
 // GET FUNCTION
 router.get('/', function (req, res) {
-    console.log('in get inventory route');
+    // console.log('in get inventory route');
     pool.connect(function (connectionError, client, done) {
         if (connectionError) {
             console.log(connectionError);
@@ -15,7 +15,7 @@ router.get('/', function (req, res) {
                     console.log(connectionError);
                     res.sendStatus(500);
                 } else {
-                    console.log('console logging resultObj.rows', resultObj.rows);
+                    // console.log('console logging resultObj.rows inside /koala GET function', resultObj.rows);
                     res.send(resultObj.rows);
                 }
             });
@@ -35,31 +35,67 @@ router.post('/', function (req, res) {
     }
 }); // end POST function
 
+router.post('/update', function (req, res) {
+    var koalaToTransfer = req.body;
+    console.log('inside /update post of /koalas. Koala to xfer is ->', koalaToTransfer);
+    if (koalaToTransfer == undefined) {
+        console.log('Logging "undefined" error inside koalas/update');
+        res.sendStatus(500);
+    } else {
+        console.log('Calling /update on koalaID ' + koalaToTransfer);
+        koalaUpdate(koalaToTransfer);
+    }
+});
+
+function koalaUpdate(req, res) {
+    console.log('logging req inside koalaUpdate() -> ', req);
+    console.log('inside koalaUpdate() of /koalas. Koala to xfer is ->', req.body.id);
+    pool.connect(function (connectionError, client, done) {
+        if (connectionError) {
+            console.log('connection error in koalaDelete ', connectionError);
+            res.sendStatus(500);
+        } else {
+            var queryString = "UPDATE koalas_inventory SET ready_for_transfer='Y' WHERE id=($1);";
+            var values = [req];
+            client.query(queryString, values, function (err, result) {
+                done();
+                if (err) {
+                    // console.log(err, 'logging queryError in koalaDelete query');
+                    res.sendStatus(500);
+                } else {
+                    console.log('Logging resultObj from koala update- > ', result);
+                    res.send(result);
+                }
+            });
+        }
+    });
+}
+
 function koalaDelete(req, res) {
-    pool.connect(function(connectionError, client, done){
+    pool.connect(function (connectionError, client, done) {
         if (connectionError) {
             console.log('connection error in koalaDelete ', connectionError);
             res.sendStatus(500);
         } else {
             var koalaID = req.body.id;
-            console.log('deleting koala #', koalaID);            
+            console.log('deleting koala #', koalaID);
             var queryString = "DELETE FROM koalas_inventory WHERE id=($1);";
             var values = [koalaID];
-            client.query(queryString, values, function (queryError, resultObj) {
+            client.query(queryString, values, function (err, result) {
                 done();
-                if (queryError) {
-                    console.log(queryError, 'logging queryError in koalaDelete query');
+                if (err) {
+                    console.log(err, 'logging queryError in koalaDelete query');
                     res.sendStatus(500);
                 } else {
-                    console.log('Logging resultObj from koala Delete- > ', resultObj.rows);
-                    res.send(resultObj.rows);
+                    console.log('Logging resultObj from koala Delete- > ', result.rows);
+                    res.send(result.rows);
                 }
             });
         }
     });
 } // end delete function
 
-function koalaDBPush (req, res) {
+function koalaDBPush(req, res) {
     var koalaName = req.body.name;
     var koalaAge = req.body.age;
     var koalaGender = req.body.gender;

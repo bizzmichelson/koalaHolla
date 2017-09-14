@@ -79,10 +79,25 @@ $("#viewKoalas").empty();
     + '</td><td>' + gender 
     + '</td><td>' + readyForTransfer 
     + '</td><td>' + notes 
-    + '</td><td><button type="button" class="btn btn-success">Ready for Transfer</button></td><td><button class="deleteButton btn btn-danger">Delete</button></td></tr>');
+    + '</td><td><button type="button" class="readyForTransferButton btn btn-success">Ready for Transfer</button></td><td><button class="deleteButton btn btn-danger">Delete</button></td></tr>');
   }
   $('.deleteButton').on('click', removeKoala);
+  $('.readyForTransferButton').on('click', transferKoala);
 }// end appendKoala()
+
+function transferKoala() {
+  var koalaToTransfer = $(this).closest('tr').data();
+  console.log('logging koalaToTransfer inside client.js transferKoala() ->', koalaToTransfer);
+  $.ajax({
+    url: '/koalas/update',
+    type: 'POST',
+    id: koalaToTransfer,
+    success: function (data) {
+      console.log('updated koala! ->', koalaToTransfer);
+      getKoalas();
+    } // end success
+  }); //end ajax
+}
 
 function removeKoala() {
   var koalaToDelete = $(this).closest('tr').data();
