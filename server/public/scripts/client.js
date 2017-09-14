@@ -4,35 +4,39 @@ $(document).ready(function () {
   console.log('JQ');
   // load existing koalas on page load
   getKoalas();
+  $('#addButton').on('click', addKoala);
+  $('#viewKoalas').on('click', '.deleteButton', removeKoala);
+  $('#viewKoalas').on('click', '.readyForTransferButton', transferKoala);
 
-  // add koala button click
-  $('#addButton').on('click', function () {
-    console.log('in addButton on click');
-    var name = $('#nameIn').val();
-    var age = $('#ageIn').val();
-    var gender = $('#genderIn').val();
-    var readyForTransfer = $('#readyForTransferIn').val();
-    var notes = $('#notesIn').val();
-    // get user input and put in an object
-    // NOT WORKING YET :(
-    // using a test object
-    var objectToSend = {
-      name: name,
-      age: age,
-      gender: gender,
-      readyForTransfer: readyForTransfer,
-      notes: notes
-    };
-    // call saveKoala with the new obejct
-    saveKoala(objectToSend);
-    // Below not working -- will deal with this later
-    $('#nameIn').val("");
-    $('#ageIn').val("");
-    $('#genderIn').val("");
-    $('#readyForTransferIn').val("");
-    $('#notesIn').val("");
-  }); //end addButton on click
 }); // end doc ready
+
+function addKoala () {
+    // add koala button click
+      console.log('in addButton on click');
+      var name = $('#nameIn').val();
+      var age = $('#ageIn').val();
+      var gender = $('#genderIn').val();
+      var readyForTransfer = $('#readyForTransferIn').val();
+      var notes = $('#notesIn').val();
+      // get user input and put in an object
+      // NOT WORKING YET :(
+      // using a test object
+      var objectToSend = {
+        name: name,
+        age: age,
+        gender: gender,
+        readyForTransfer: readyForTransfer,
+        notes: notes
+      };
+      // call saveKoala with the new obejct
+      saveKoala(objectToSend);
+      // Below not working -- will deal with this later
+      $('#nameIn').val("");
+      $('#ageIn').val("");
+      $('#genderIn').val("");
+      $('#readyForTransferIn').val("");
+      $('#notesIn').val(""); 
+} //end addButton on click
 
 function getKoalas() {
   // console.log('in getKoalas');
@@ -81,17 +85,15 @@ $("#viewKoalas").empty();
     + '</td><td>' + notes 
     + '</td><td><button type="button" class="readyForTransferButton btn btn-success">Ready for Transfer</button></td><td><button class="deleteButton btn btn-danger">Delete</button></td></tr>');
   }
-  $('.deleteButton').on('click', removeKoala);
-  $('.readyForTransferButton').on('click', transferKoala);
 }// end appendKoala()
 
 function transferKoala() {
   var koalaToTransfer = $(this).closest('tr').data();
-  console.log('logging koalaToTransfer inside client.js transferKoala() ->', koalaToTransfer);
+  console.log('logging koalaToTransfer inside client.js transferKoala() ->', koalaToTransfer.id);
   $.ajax({
     url: '/koalas/update',
     type: 'POST',
-    id: koalaToTransfer,
+    id: koalaToTransfer.id,
     success: function (data) {
       console.log('updated koala! ->', koalaToTransfer);
       getKoalas();
