@@ -35,21 +35,21 @@ router.post('/', function (req, res) {
     }
 }); // end POST function
 
-router.post('/update', function (req, res) {
-    var koalaToTransfer = req.body;
+router.post('/update/:id', function (req, res) {
+    var koalaToTransfer = req.params.id;
     console.log('inside /update post of /koalas. Koala to xfer is ->', koalaToTransfer);
     if (koalaToTransfer == undefined) {
         console.log('Logging "undefined" error inside koalas/update');
         res.sendStatus(500);
     } else {
         console.log('Calling /update on koalaID ' + koalaToTransfer);
-        koalaUpdate(koalaToTransfer);
+        koalaUpdate(koalaToTransfer, res);
     }
 });
 
 function koalaUpdate(req, res) {
     console.log('logging req inside koalaUpdate() -> ', req);
-    console.log('inside koalaUpdate() of /koalas. Koala to xfer is ->', req.body.id);
+    console.log('inside koalaUpdate() of /koalas. Koala to xfer is ->', req);
     pool.connect(function (connectionError, client, done) {
         if (connectionError) {
             console.log('connection error in koalaDelete ', connectionError);
@@ -60,11 +60,12 @@ function koalaUpdate(req, res) {
             client.query(queryString, values, function (err, result) {
                 done();
                 if (err) {
-                    // console.log(err, 'logging queryError in koalaDelete query');
+                    console.log(err, ' <- logging queryError in koalaDelete query');
                     res.sendStatus(500);
                 } else {
-                    console.log('Logging resultObj from koala update- > ', result);
+                    console.log('Logging resultObj from koala update- > ', result.rows);
                     res.send(result);
+                    // res.sendStatus(result); // sendStatus breaks the function
                 }
             });
         }

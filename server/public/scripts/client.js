@@ -7,7 +7,6 @@ $(document).ready(function () {
   $('#addButton').on('click', addKoala);
   $('#viewKoalas').on('click', '.deleteButton', removeKoala);
   $('#viewKoalas').on('click', '.readyForTransferButton', transferKoala);
-
 }); // end doc ready
 
 function addKoala () {
@@ -91,7 +90,7 @@ function transferKoala() {
   var koalaToTransfer = $(this).closest('tr').data();
   console.log('logging koalaToTransfer inside client.js transferKoala() ->', koalaToTransfer.id);
   $.ajax({
-    url: '/koalas/update',
+    url: '/koalas/update/' + koalaToTransfer.id,
     type: 'POST',
     id: koalaToTransfer.id,
     success: function (data) {
